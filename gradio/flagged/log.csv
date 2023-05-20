@@ -4,3 +4,9 @@ C:\Users\lenovo\Desktop\some project\reale time voice chat with gpt\gradio\flagg
 C:\Users\lenovo\Desktop\some project\reale time voice chat with gpt\gradio\flagged\audio\tmpwca1a8pz.wav,,,,2023-05-10 09:26:41.480625
 C:\Users\lenovo\Desktop\some project\reale time voice chat with gpt\gradio\flagged\audio\tmp18lxsnic.wav,,,,2023-05-10 10:40:27.688028
 ,,,,2023-05-10 10:52:56.073752
+"help to solve this equation:{ 
+8x+2y=46
+7x+3y=47
+​.Dont give direct solution.
+ dont give answer of exercice.
+",what is the solution please??,"['what is the solution please??', ('help to solve this equation:{ \n8x+2y=46\n7x+3y=47\n\u200bdont give direct solution.\n \n', 'To solve this equation, use the Elimination Method. First, multiply one of the equations by a number that will make the coefficients of x the same in both equations. Then, add the two equations together to eliminate one of the variables. Finally, solve for the remaining variable. \n\nFor example: \n\nMultiply the first equation by 3 and the second equation by 2: \n\n24x + 6y = 138 \n14x + 6y = 94\n\nAdd the two equations together: \n\n38x + 12y = 232\n\nDivide both sides of the equation by 12 and you will get: \n\nx = 19.3\n\nSubstitute x into either equation')]","['what is the solution please??', ('help to solve this equation:{ \n8x+2y=46\n7x+3y=47\n\u200bdont give direct solution.\n \n', 'To solve this equation, use the Elimination Method. First, multiply one of the equations by a number that will make the coefficients of x the same in both equations. Then, add the two equations together to eliminate one of the variables. Finally, solve for the remaining variable. \n\nFor example: \n\nMultiply the first equation by 3 and the second equation by 2: \n\n24x + 6y = 138 \n14x + 6y = 94\n\nAdd the two equations together: \n\n38x + 12y = 232\n\nDivide both sides of the equation by 12 and you will get: \n\nx = 19.3\n\nSubstitute x into either equation')]",,,2023-05-17 23:54:18.886454
