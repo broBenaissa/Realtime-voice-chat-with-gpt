@@ -1,30 +1,44 @@
-
-from flask import Flask, jsonify
-from flask_cors import CORS
-import openai,config,json
-import real
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from whisper import load_model
+import openai, config, json,real
+import speech_recognition as sr
 
 model = load_model("tiny")
+r = sr.Recognizer()
+
 openai.api_key = config.OPENAI_API_KEY
-app = Flask(__name__)
-CORS(app)
+
+app = FastAPI()
+
+# CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
 
 def transcribe_audio(audio_path):
     result = model.transcribe(audio_path)
-    print(result["text"])
+    print(audio_path)
+    #result = r.recognize_google(audio_path)
+    
     return (result["text"])
 
 
-# API Route
-@app.route('/')
-def get_result():
+@app.get("/")
+async def get_result():
     audio_path = "./audio.wav"
     data = transcribe_audio(audio_path)
     with open("./audio.json", "w") as file:
         json.dump({"result": data}, file)
-    return jsonify({"result": data})
+        
+    return {"result": data}
+
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8000)
