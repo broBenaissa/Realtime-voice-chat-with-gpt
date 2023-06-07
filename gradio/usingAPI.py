@@ -3,43 +3,37 @@ from gtts import gTTS
 from datetime import datetime
 from pydub import AudioSegment
 from pydub.playback import play
-import os 
-import openai, config
-openai.api_key = config.OPENAI_API_KEY
+import os,openai
 
-messages = [{"role": "system", "content": 'You are a benaissaChatBot .speak only english.you are a teacher. Respond to all input in 20 words or less.'}]
+from pymongo import MongoClient
+
+client = MongoClient('mongodb+srv://benaissa:benaissamongodb@youssefcluster.ogkngyi.mongodb.net/') 
+db = client['audio_chat_gpt']
+collection = db['Historic']
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+messages = [{"role": "system", "content": 'Give me short response.You are a clever english assistant.Your goal is to help users.Answer in 20 words or liss'}
+           
+            ]
 
 def transcribe(audio):
     global messages
-
-    audio_filename_with_extension = audio + '.wav'
+    #make user audio
+    audio_filename_with_extension = audio+'.wav'
     os.rename(audio, audio_filename_with_extension)
-    
     audio_file = open(audio_filename_with_extension, "rb")
     transcript = openai.Audio.transcribe("whisper-1", audio_file)
-
-    messages.append({"role": "user", "content": transcript["text"]})
-
+    transcript_content= transcript["text"]
+    messages.append({"role": "user", "content": transcript_content})
+    #openai messaging
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
-
     system_message = response["choices"][0]["message"]
-    messages.append(system_message)
-
+    messages.append(system_message)  
     # read openai response using google text to speech
     last_message = messages[-1]
     assistant_response = last_message["content"]
-    audio= gTTS (text =assistant_response, lang='fr',slow=False)
-
-    # read openai response using google text to speech
-    last_message = messages[-1]
-    assistant_response = last_message["content"]
-    audio= gTTS (text =assistant_response, lang='en',slow=False)
-            
-    # read openai response using google text to speech
-    last_message = messages[-1]
-    assistant_response = last_message["content"]
-    audio= gTTS (text =assistant_response, lang='en',slow=False, tld='us')
-    
+    audio = gTTS (text =assistant_response, lang='en',slow=False, tld='us')
     #give name and path to file 
     folder_path = "./responses"
     os.makedirs(folder_path, exist_ok=True)
@@ -51,12 +45,17 @@ def transcribe(audio):
     audio = AudioSegment.from_file(file_path, format="mp3")
     play(audio)
 
+    #collection.insert_one({'question': transcript_content} )
+    #collection.insert_one({'answer2': system_message} )
+    #append messages to chat history
     chat_transcript = ""
     for message in messages:
         if message['role'] != 'system':
             chat_transcript += message['role'] + ": " + message['content'] + "\n\n"
 
     return chat_transcript
+ui = gr.Interface(fn=transcribe,title='Voice chatGPT', inputs=gr.Audio(label='Record audio from here',
+                  source="microphone", type="filepath",interactive=True,StopIteration=True), outputs="text",allow_flagging='never',
+                  live=True,css=".gradio-container {background-color: #a9a9aa}")
 
-ui = gr.Interface(fn=transcribe,title='Voice chatGPT', inputs=gr.Audio(source="microphone", type="filepath"), outputs="text")
-ui.launch(share=True , auth=("benaissa","benaissa"))
+ui.launch(favicon_path='./icon/icon.png',show_error=True)#auth=("benaissa","benaissa"))
