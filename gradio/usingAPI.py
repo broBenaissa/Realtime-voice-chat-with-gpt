@@ -58,4 +58,4 @@ ui = gr.Interface(fn=transcribe,title='Voice chatGPT', inputs=gr.Audio(label='Re
                   source="microphone", type="filepath",interactive=True,StopIteration=True), outputs="text",allow_flagging='never',
                   live=True,css=".gradio-container {background-color: #a9a9aa}")
 
-ui.launch(favicon_path='./icon/icon.png',show_error=True)#auth=("benaissa","benaissa"))
+ui.launch(favicon_path='./icon/icon.png',show_error=True,auth=("benaissa","benaissa"))

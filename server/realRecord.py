@@ -5,6 +5,7 @@ from numpy import array, int16
 from scipy.io.wavfile import write
 import numpy as np
 import pyttsx3
+from pydub.playback import play
 
 CHUNK = 8096
 FORMAT = pyaudio.paInt16
@@ -12,13 +13,13 @@ CHANNELS = 1
 RATE = 44100
 RECORD_SECONDS = 5
 WAVE_OUTPUT_FILENAME = "./cache/Question.wav"
-KEYWORD = 'ok'
+KEYWORD = 'hey'
 ENDWORD = 'ok'
 #initalisations
 r = sr.Recognizer()
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
-engine.setProperty('voice', 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0')
+engine.setProperty('voice', 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_MARK_11.0')
 #functions
 def speak(audio):
     engine.say(audio)
@@ -26,19 +27,21 @@ def speak(audio):
 
 def listen_for_startword():
     global KEYWORD
-    with sr.Microphone() as source:
-        print("Listening for start word...")
-        audio = r.listen(source)
+    while True:
+        with sr.Microphone() as source:
+            print("Listening for start word...")
+            audio = r.listen(source)
 
-        try:
-            transcript = r.recognize_google(audio)
-            if KEYWORD in transcript:
-                speak('yes sir')
-                return True
-        except sr.UnknownValueError:
-            pass
+            try:
+                transcript = r.recognize_google(audio)
+                print(transcript)
+                if KEYWORD in transcript:
+                    play('./cache/yes.mp3')
+                    return True
+            except sr.UnknownValueError:
+                pass
 
-        return False
+            return False
 
 
 def listen_for_endword():

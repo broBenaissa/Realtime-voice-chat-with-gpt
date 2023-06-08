@@ -49,15 +49,23 @@ def read_response(AI_response):
     return 0
 
 
-@app.get("/data")
+@app.get("/")
 async def get_result():
     audio_path = "./cache/Question.wav"
     ask = transcribe_audio(audio_path)
     respo=get_response(ask)
     read_response(respo)
 
-    db.collection.insert_one({'question': ask} )
-    db.collection.insert_one({'answer2': respo} )
+    historic_data = {
+        'Historic': {
+            'question': ask,
+            'answer': respo
+        }
+    }
+
+    db.collection.create_index('users')
+    db.collection.insert_one(historic_data)
+    
     data= 'User:'+ask+'\n'+'Assistante'+respo
     
     return data
